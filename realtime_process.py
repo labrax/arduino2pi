@@ -11,9 +11,9 @@ def output(s):
     global open_file
     global filename
     T = time.strftime("%Y,%m,%d,%H,%M,%S,")
-    print(T + s)
+    #print(T + s)
     open_file.write(T + s + '\n')
-    nfile = 'data/' + time.strftime("%Y%m%d") + '.csv'
+    nfile = '/home/pi/arduino2pi/data/' + time.strftime("%Y%m%d") + '.csv'
     if nfile != filename:
         open_file.close()
         open_file = open(nfile, "a")
