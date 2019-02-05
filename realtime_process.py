@@ -45,6 +45,7 @@ def run():
     while True:
         read_serial = ser.readline()
         s = ser.readline().decode().strip()
+        #print(s)
         E = s.split(',')
         if len(E) < 6:
             continue
