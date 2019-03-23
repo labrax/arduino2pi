@@ -41,7 +41,7 @@ def output(s):
 def run():
     ser = serial.Serial('/dev/ttyUSB0',9600)
     PIR_LIST, MIC_V_LIST, MIC_C_LIST, PHR_S_LIST, BMP_T_LIST, BMP_P_LIST = MinMaxSum(), MinMaxSum(), MinMaxSum(), MinMaxSum(), MinMaxSum(), MinMaxSum()
-    workingwith = time.strftime("%S")
+    workingwith = time.strftime("%M")
     while True:
         read_serial = ser.readline()
         s = ser.readline().decode().strip()
@@ -55,7 +55,7 @@ def run():
         PHR_S_LIST.add(int(PHR_S))
         BMP_T_LIST.add(float(BMP_T))
         BMP_P_LIST.add(float(BMP_P))
-        cur = time.strftime("%S")
+        cur = time.strftime("%M")
         if cur != workingwith:
             Plen = PIR_LIST.len
             if Plen > 0:
@@ -88,8 +88,8 @@ if __name__ == '__main__':
     while True:
         try:
             run()
-            time.sleep(5)
         except Exception as e:
             print(e)
+        time.sleep(5)
 
 
