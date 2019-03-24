@@ -14,17 +14,21 @@ class Measurement{
 private:
   T minV, maxV, sumV;
   short int N;
+  boolean any_value = false;
 public:
   Measurement() {
     reset();
   }
   void reset() {
-    this->minV = 99999999;
-    this->maxV = -99999999;
-    this->N = 0;
-    this->sumV = 0;
+    any_value = false;
+    N = 0;
+    sumV = 0;
   }
   void add_measurement(T value) {
+    if(not any_value) {
+      minV = value;
+      maxV = value;
+    }
     if(value < minV)
       minV = value;
     if(value > maxV)
@@ -47,26 +51,16 @@ public:
 };
 
 
-Measurement<double> pir;
+Measurement<int> pir;
 Measurement<double> mic;
 Measurement<double> phr;
 Measurement<float> tmp;
 Measurement<float> pressure;
 
-/*
-PIR BLOCK
-*/
-#define PIR_SENSOR_DIGITAL 2
-
-/*
-MICROPHONE BLOCK
-*/
-#define MIC_SENSOR_ANALOG A0
-
-/*
-PHOTORESISTOR BLOCK
-*/
-#define PHR_SENSOR_ANALOG A1
+#define PIR_SENSOR_DIGITAL D7
+#define ANALOG_INPUT A0
+#define MIC_SENSOR_MULTIPLEX D6
+#define PHR_SENSOR_MULTIPLEX D0
 
 /*
 BMP280 BLOCK
@@ -85,8 +79,9 @@ unsigned long nextPrint = 0;
 
 void setup() {
   pinMode(PIR_SENSOR_DIGITAL, INPUT);
-  pinMode(MIC_SENSOR_ANALOG, INPUT);
-  pinMode(PHR_SENSOR_ANALOG, INPUT);
+  pinMode(ANALOG_INPUT, INPUT);
+  pinMode(MIC_SENSOR_MULTIPLEX, OUTPUT);
+  pinMode(PHR_SENSOR_MULTIPLEX, OUTPUT);
   
   if(!bmp.begin()) {
     Serial.println("BMP280 NOT FOUND!");
@@ -94,9 +89,9 @@ void setup() {
     bmp_is_valid = 1;
   }
   
-  analogReference(DEFAULT);
+  //analogReference(DEFAULT);
 
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   Serial.println(PRINT_WINDOW);
   Serial.println(SAMPLE_WINDOW);
@@ -127,13 +122,14 @@ void mic_op() {
   unsigned int sample;
 
   //sink previous values
-  sample = analogRead(MIC_SENSOR_ANALOG);
+  digitalWrite(MIC_SENSOR_MULTIPLEX, HIGH);
   delay(10);
- 
+
+  
   // collect data for 50 mS
   while (millis() - startMillis < SAMPLE_WINDOW)
   {
-     sample = analogRead(MIC_SENSOR_ANALOG);
+     sample = analogRead(ANALOG_INPUT);
      if (sample < 1024)  // toss out spurious readings
      {
         if (sample > signalMax)
@@ -146,19 +142,24 @@ void mic_op() {
         }
      }
   }
-
   peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
   double volts = (peakToPeak * 5.0) / 1024;  // convert to volts
 
   mic.add_measurement(volts);
+
+
+  //mic.add_measurement(analogRead(ANALOG_INPUT));
+
+  digitalWrite(MIC_SENSOR_MULTIPLEX, LOW);
 }
 
 void phr_op() {
+  digitalWrite(PHR_SENSOR_MULTIPLEX, HIGH);
   //this will sink the previous analog read and provide enough time for it to be determined for next read
-  analogRead(PHR_SENSOR_ANALOG);
   delay(10);
   //
-  phr.add_measurement(analogRead(PHR_SENSOR_ANALOG));
+  phr.add_measurement(analogRead(ANALOG_INPUT));
+  digitalWrite(PHR_SENSOR_MULTIPLEX, LOW);
 }
 
 
