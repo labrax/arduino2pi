@@ -4,7 +4,7 @@ import serial
 import time
 import requests
 
-url_string = 'http://localhost:8086/write?db=roomsensors_window'
+url_string = 'http://192.168.0.200:8086/write?db=roomsensors_window'
 
 
 def sendInflux(name, units, value, host="vvv-nano-2"):
