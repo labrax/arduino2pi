@@ -7,7 +7,7 @@ import requests
 url_string = 'http://localhost:8086/write?db=roomsensors'
 
 
-def sendInflux(passiveinfrared, mic, photoresistor, temperature, pressure, humidity, host="vvv-nano", table_name='nearbed_v0'):
+def sendInflux(passiveinfrared, mic, photoresistor, temperature, pressure, humidity, host="vvv-nano", table_name='nearbed'):
     data_string = '{table_name},host={host} passiveinfrared={passiveinfrared},mic={mic},photoresistor={photoresistor},temperature={temperature},pressure={pressure},humidity={humidity}'.format(table_name=table_name, host=host, passiveinfrared=passiveinfrared, mic=mic, photoresistor=photoresistor, temperature=temperature, pressure=pressure, humidity=humidity)
     r = requests.post(url_string, data=data_string)
 

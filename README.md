@@ -1,4 +1,11 @@
 # arduino2pi
 
-Add to /etc/rc.local
-sudo su pi -c "python3 /home/pi/arduino2pi/realtime_process.py" &
+## Install
+
+pyserial requests
+
+## Set to run on boot
+
+$ crontab -e
+
+@reboot python $HOME/arduino2pi/realtime_process.py
