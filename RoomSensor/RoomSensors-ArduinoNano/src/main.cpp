@@ -78,7 +78,7 @@ boolean bme_is_valid = 0;
 CONTROL BLOCK
 */
 #define SAMPLE_WINDOW 50 //in ms
-#define PRINT_WINDOW 1000
+#define PRINT_WINDOW 10000
 unsigned long nextPrint = 0;
 
 
@@ -86,6 +86,8 @@ void setup() {
   pinMode(PIR_SENSOR_DIGITAL, INPUT);
   pinMode(MIC_SENSOR_ANALOG, INPUT);
   pinMode(PHR_SENSOR_ANALOG, INPUT);
+
+  Serial.begin(115200);
 
   if(!bme.begin()) {
     Serial.println("BME280 NOT FOUND!");
@@ -95,9 +97,6 @@ void setup() {
   }
 
   //analogReference(DEFAULT);
-
-  Serial.begin(115200);
-
   Serial.println(PRINT_WINDOW);
   Serial.println(SAMPLE_WINDOW);
   Serial.println("TIME,PIR,MIC,PHR,TEMP,PRESSURE,HUMIDITY");
