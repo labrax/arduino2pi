@@ -7,8 +7,8 @@ import requests
 url_string = 'http://localhost:8086/write?db=roomsensors'
 
 
-def sendInflux(name, units, value, host="vvv-nano"):
-    data_string = '{name},host={host},units={units} value={value}'.format(name=name, host=host, units=units, value=value)
+def sendInflux(passiveinfrared, mic, photoresistor, temperature, pressure, humidity, host="vvv-nano", table_name='nearbed_v0'):
+    data_string = '{table_name},host={host} passiveinfrared={passiveinfrared},mic={mic},photoresistor={photoresistor},temperature={temperature},pressure={pressure},humidity={humidity}'.format(table_name=table_name, host=host, passiveinfrared=passiveinfrared, mic=mic, photoresistor=photoresistor, temperature=temperature, pressure=pressure, humidity=humidity)
     r = requests.post(url_string, data=data_string)
 
 
@@ -59,12 +59,7 @@ def run():
         if len(E) < 6:
             continue
         _, PIR, MIC_V, _, PHR_S, BME_T, BME_P, BME_H = E
-        sendInflux("passiveinfrared", "binary", PIR)
-        sendInflux("mic", "volts", MIC_V)
-        sendInflux("photoresistor", "volts", PHR_S)
-        sendInflux("temperature", "celsius", BME_T)
-        sendInflux("pressure", "pascal", BME_P)
-        sendInflux("humidity", "%", BME_H)
+        sendInflux(passiveinfrared=PIR, mic=MIC_V, photoresistor=PHR_S, temperature=BME_T, pressure=BME_P, humidity=BME_H)
         #PIR_LIST.add(int(PIR))
         #MIC_V_LIST.add(float(MIC_V))
         #MIC_C_LIST.add(int(MIC_C))
