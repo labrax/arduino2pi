@@ -32,6 +32,9 @@ unsigned long curTime;
 void setup() {
   Serial.begin(115200);
 
+  WiFi.disconnect();
+  WiFi.softAPdisconnect(true);
+  WiFi.mode(WIFI_STA);
   WiFi.begin("VM274904-2G", "zjccfgca");
 
   pir.begin();
