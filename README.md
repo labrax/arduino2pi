@@ -2,7 +2,19 @@
 
 ## Install
 
-pyserial requests
+### Software
+
+```bash
+sudo apt-get install python3-pip
+pip3 install pyserial requests
+```
+
+### InfluxDB setting
+
+```bash
+$ influxdb
+> CREATE DATABASE roomsensors
+```
 
 ## Set to run on boot
 
